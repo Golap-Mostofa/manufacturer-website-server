@@ -3,7 +3,7 @@ const cors = require('cors');
 var jwt = require('jsonwebtoken');
 require('dotenv').config()
 const { MongoClient, ServerApiVersion } = require('mongodb');
-
+const ObjectId = require('mongodb').ObjectId
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -21,13 +21,17 @@ async function run(){
         const productColloction = client.db('motorbike').collection('products');
         const bookingColloction = client.db('motorbike').collection('bookings');
         const product2Colloction = client.db('motorbike').collection('product_2');
+        const userColloction = client.db('motorbike').collection('users');
         
         app.get('/product',async(req,res)=>{
             const query = {};
-            const cursor = productColloction.find(query).project({name: 1});
+            const cursor = productColloction.find(query);
             const products = await cursor.toArray();
             res.send(products)
         })
+
+       
+
         //all user
         app.get('/user',async(req,res)=>{
           const users = await userColloction.find().toArray()
@@ -82,11 +86,30 @@ async function run(){
           const result = await bookingColloction.insertOne(booking);
           return res.send({success:true, result})
         })
+        app.get(`/prodact`,async(req,res)=>{
+          const products = await product2Colloction.find().toArray()
+          res.send(products)
+        })
+
 
         app.post('/prodact',async(req,res)=>{
           const product = req.body
           const result = await product2Colloction.insertOne(product)
           res.send(result)
+        })
+
+
+        app.get('/pd',async(req,res)=>{
+          const result = await product2Colloction.find().toArray()
+          res.send(result)
+        })
+
+       
+        app.get('/booking/:id',async(req,res)=>{
+          const id = req.params.id
+          const query = {_id: ObjectId(id)}
+          const booking = await bookingColloction.findOne(query)
+          res.send(booking)
         })
 
     }
