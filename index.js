@@ -60,7 +60,7 @@ async function run(){
             res.send({result,token})
 
         })
-
+        // lode admin useParams
         app.put('/user/admin/:email',async(req,res)=>{
             const email = req.params.email
             console.log(email);
@@ -75,7 +75,7 @@ async function run(){
             res.send({result})
 
         })
-
+        // payment Sistem
         app.post('/create-payment', async(req,res)=>{
           const service = req.body
           const price = service.price;
@@ -108,6 +108,7 @@ async function run(){
           const result = await bookingColloction.insertOne(booking);
           return res.send({success:true, result})
         })
+        // Loade product
         app.get(`/prodact`,async(req,res)=>{
           const products = await product2Colloction.find().toArray()
           res.send(products)
