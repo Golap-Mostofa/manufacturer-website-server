@@ -23,6 +23,7 @@ async function run(){
         const bookingColloction = client.db('motorbike').collection('bookings');
         const product2Colloction = client.db('motorbike').collection('product_2');
         const userColloction = client.db('motorbike').collection('users');
+
         
         app.get('/product',async(req,res)=>{
             const query = {};
@@ -30,6 +31,7 @@ async function run(){
             const products = await cursor.toArray();
             res.send(products)
         })
+        // loade product
         app.get('/product/:id',async(req,res)=>{
           const id = req.params.id
           const query = {_id: ObjectId(id)}
@@ -44,7 +46,7 @@ async function run(){
           const users = await userColloction.find().toArray()
           res.send(users)
         })
-
+        // load user by email
         app.put('/user/:email',async(req,res)=>{
             const email = req.params.email
             const user = req.body
@@ -74,7 +76,7 @@ async function run(){
 
         })
 
-        app.post('create-payment', async(req,res)=>{
+        app.post('/create-payment', async(req,res)=>{
           const service = req.body
           const price = service.price;
           const amount = price*100
