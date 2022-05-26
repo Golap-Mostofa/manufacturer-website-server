@@ -74,7 +74,18 @@ async function run(){
 
         })
 
-        
+        app.post('create-payment', async(req,res)=>{
+          const service = req.body
+          const price = service.price;
+          const amount = price*100
+          const paymentInten = await stripe.paymentIntents.create({
+            amount: amount,
+            currency: 'usd',
+            payment_method_types:['card']
+
+          });
+          res.send({clientSecret: paymentInten.client_secret})
+        })
 
         //user dashbord
         app.get('/booking',async(req,res)=>{
