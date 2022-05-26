@@ -4,6 +4,7 @@ var jwt = require('jsonwebtoken');
 require('dotenv').config()
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const ObjectId = require('mongodb').ObjectId
+const stripe = require('stripe')(process.env.STRIPE_KEY);
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -28,6 +29,12 @@ async function run(){
             const cursor = productColloction.find(query);
             const products = await cursor.toArray();
             res.send(products)
+        })
+        app.get('/product/:id',async(req,res)=>{
+          const id = req.params.id
+          const query = {_id: ObjectId(id)}
+          const booking = await productColloction.findOne(query)
+          res.send(booking)
         })
 
        
@@ -67,6 +74,8 @@ async function run(){
 
         })
 
+        
+
         //user dashbord
         app.get('/booking',async(req,res)=>{
           const parbooked = req.query.email;
@@ -105,12 +114,7 @@ async function run(){
         })
 
        
-        app.get('/booking/:id',async(req,res)=>{
-          const id = req.params.id
-          const query = {_id: ObjectId(id)}
-          const booking = await bookingColloction.findOne(query)
-          res.send(booking)
-        })
+      
 
     }
     finally{
